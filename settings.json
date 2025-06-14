@@ -1,0 +1,15 @@
+{
+    "wake_phrase": "ola jarvis",
+    "ahk_path": "C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey64.exe",
+    "action_groups": [],
+    "chrome_profiles": [
+        {
+            "name": "Padrao",
+            "shortcut_path": "C:/Users/verdant/Desktop/Padrao.lnk"
+        },
+        {
+            "name": "Trabalho",
+            "shortcut_path": "C:/Users/verdant/Desktop/Trabalho.lnk"
+        }
+    ]
+}

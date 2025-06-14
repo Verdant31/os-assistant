@@ -3,11 +3,50 @@
 appExe := A_Args.Length >= 1 ? A_Args[1] : ""
 position := A_Args.Length >= 2 ? A_Args[2] : ""
 monitorIndex := A_Args.Length >= 3 ? A_Args[3] : 3
+windowTitle := A_Args.Length >= 4 ? A_Args[4] : ""
 
-hwnd := WinExist(appExe)
-if !hwnd {
-    MsgBox "Erro: não foi possível encontrar a janela do aplicativo."
-    ExitApp
+if (appExe = "chrome.exe") {
+    if (windowTitle != "") {
+        windowPattern := "ahk_exe chrome.exe ahk_class Chrome_WidgetWin_1"
+        windows := WinGetList(windowPattern)
+
+        foundHwnd := 0
+        loop windows.Length {
+            hwnd := windows[A_Index]
+            title := WinGetTitle("ahk_id " . hwnd)
+
+            searchTitle := StrLower(windowTitle)
+            windowTitleLower := StrLower(title)
+            titleMatch := (windowTitle = "") || InStr(windowTitleLower, searchTitle)
+
+            if (titleMatch) {
+                foundHwnd := hwnd
+                break
+            }
+        }
+
+        if (!foundHwnd) {
+            errorMsg := "Error: Could not find Chrome window"
+            if (windowTitle != "") {
+                errorMsg .= " containing title: " . windowTitle
+            }
+            MsgBox errorMsg
+            ExitApp
+        }
+        hwnd := foundHwnd
+    } else {
+        hwnd := WinExist("ahk_exe chrome.exe ahk_class Chrome_WidgetWin_1")
+        if (!hwnd) {
+            MsgBox "Error: No Chrome window found. Please specify a profile name or window title if you have multiple Chrome windows."
+            ExitApp
+        }
+    }
+} else {
+    hwnd := WinExist(appExe)
+    if !hwnd {
+        MsgBox "Error: Could not find the application window."
+        ExitApp
+    }
 }
 
 MonitorGetWorkArea(monitorIndex, &left, &top, &right, &bottom)
